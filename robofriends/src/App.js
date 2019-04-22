@@ -3,22 +3,29 @@ import CardList from "./card-list";
 import SearchBox from "./SearchBox";
 import "./App.css";
 
-import { robots } from "./robots";
-
 class App extends Component {
   state = {
+    robots: [],
     searchField: ""
   };
+
+  componentDidMount() {
+    fetch("https://jsonplaceholder.typicode.com/users")
+      .then(response => response.json())
+      .then(users => this.setState({robots: users}))
+      .catch(err => console.log(err.message));
+  }
 
   onChangeHandler = event => {
     this.setState({ searchField: event.target.value });
   };
 
   render() {
-    const filteredRobots = robots.filter((robot, i) =>
-      robot.name
-        .toLowerCase()
-        .includes(this.state.searchField.toLowerCase())
+    const filteredRobots = this.state.robots.filter(
+      (robot, i) =>
+        robot.name
+          .toLowerCase()
+          .includes(this.state.searchField.toLowerCase())
     );
 
     return (
